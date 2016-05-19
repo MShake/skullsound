@@ -9,16 +9,18 @@
 
 module.exports = {
 
-  attributes: {
+  attributes : {
 
-    title: {type: 'string', defaultsTo: 'unknow'},
+    title : {type : 'string', defaultsTo : 'unknow'},
 
-    album: {type: 'string', defaultsTo: 'unknow'},
+    album : {type : 'string', defaultsTo : 'unknow'},
 
-    artist: {type: 'string', defaultsTo: 'unknow'},
+    artist : {type : 'string', defaultsTo : 'unknow'},
 
-    year: {type: 'string', defaultsTo: 'unknow'},
+    year : {type : 'string', defaultsTo : 'unknow'},
 
-    genre: {type: 'string', defaultsTo: 'unknow'}
+    genre : {type : 'string', defaultsTo : 'unknow'},
+
+    path : {type : 'string', required : true}
   }
 };
