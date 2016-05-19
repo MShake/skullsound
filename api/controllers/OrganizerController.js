@@ -116,7 +116,9 @@ function copyFile(path, target, tags) {
       console.log(err);
     } else {
       console.log("FILE COPIED");
-      insertIntoDatabase(target, tags);
+      if(target.split('.').pop() === 'mp3') {
+        insertIntoDatabase(target, tags);
+      }
       deleteFile(path);
     }
   });
@@ -132,5 +134,13 @@ function deleteFile(path) {
 }
 
 function insertIntoDatabase(target, tags){
-  
+  target = target.replace('assets/', '');
+  Mp3.create({title: tags.title, album: tags.album, artist: tags.artist, year: tags.year, genre: tags.genre, path: target}).exec(function(err, created){
+    if(err){
+      console.log("INSERT DB ERR");
+      console.log(err);
+    }else{
+      console.log("Music " + created.title + " created");
+    }
+  });
 }
