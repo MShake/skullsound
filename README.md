@@ -1,3 +1,5 @@
-# music
+# SkullSound API
 
-a [Sails](http://sailsjs.org) application
+## Setup MongoDB
+install [MongoDB](https://www.mongodb.com/fr) and run :
+`$ mongod`
