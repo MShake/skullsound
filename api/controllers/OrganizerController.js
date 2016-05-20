@@ -31,7 +31,9 @@ function addFileToExtract(path) {
   files.push(path);
   console.log(files);
   fs.stat(path, function (err, stat) {
-    if (err) throw err;
+    if (err){
+      console.log(err);
+    }
     setTimeout(checkEnd, endTimeout, path, stat);
   });
 
