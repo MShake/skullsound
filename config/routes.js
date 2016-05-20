@@ -34,7 +34,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/' : {view : 'homepage'}
+  '/' : {view : 'homepage'},
 
   /***************************************************************************
   *                                                                          *
@@ -45,5 +45,8 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+
+  'get /albums' : {controller: 'Mp3Controller', action: 'getAlbums'},
+  'delete /mp3/file/:id' : {controller: 'Mp3Controller', action: 'removeSongFile'}
 
 };
