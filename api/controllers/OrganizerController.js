@@ -9,6 +9,7 @@ var fs = require('fs.extra');
 var chokidar = require('chokidar');
 var id3 = require('id3js');
 var moment = require('moment');
+var pathLib = require('path');
 
 var watcher = chokidar.watch('incoming_songs', {ignored: /[\/\\]\./});
 
@@ -95,7 +96,9 @@ function checkAlbum(album, path, tags) {
 
     } else {
       console.log(targetDir + " ALREADY EXIST");
-      var target = targetDir + "/" + path.split('/').pop();
+
+      var fileName = pathLib.basename(path);
+      var target = targetDir + "/" + fileName;
       copyFile(path, target, tags);
     }
   });
@@ -105,7 +108,8 @@ function createAlbum(targetDir, path, tags) {
   fs.mkdir(targetDir, function () {
     console.log("Album " + targetDir + " create");
 
-    var target = targetDir + "/" + path.split('/').pop();
+    var fileName = pathLib.basename(path);
+    var target = targetDir + "/" + fileName;
     copyFile(path, target, tags);
 
   });
