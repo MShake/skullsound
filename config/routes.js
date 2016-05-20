@@ -47,6 +47,7 @@ module.exports.routes = {
   ***************************************************************************/
 
   'get /albums' : {controller: 'Mp3Controller', action: 'getAlbums'},
+  'put /mp3/metadata/:id': {controller: 'Mp3Controller', action: 'updateMetadata'},
   'delete /mp3/file/:id' : {controller: 'Mp3Controller', action: 'removeSongFile'}
 
 };

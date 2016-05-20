@@ -12,8 +12,10 @@ var moment = require('moment');
 var pathLib = require('path');
 
 var watcher = chokidar.watch('incoming_songs', {ignored: /[\/\\]\./});
+var watcherAsset = chokidar.watch('assets/media', {ignored: /[\/\\]\./});
 
 watcher.on('add', addFileToExtract);
+watcherAsset.on('unlink', removeFileDB);
 
 if (!fs.existsSync('incoming_songs')) {
   fs.mkdirSync('incoming_songs');
@@ -42,7 +44,7 @@ function addFileToExtract(path) {
 
 function checkEnd(path, prev) {
   fs.stat(path, function (err, stat) {
-    if (stat !== undefined && stat.mtime.getTime() === prev.mtime.getTime()) {
+    if (stat !== undefined && stat.mtime.getTime() <= prev.mtime.getTime()) {
       extract(path);
     } else {
       setTimeout(checkEnd, endTimeout, path, prev);
@@ -72,7 +74,7 @@ function extract(path) {
     }else{
       album = tags.album;
       if (album === null) {
-        album = "inconnu " + moment().format('DD-MM-YYYY');
+        album = "Inconnu_" + moment().format('DD-MM-YYYY');
       }
     }
 
@@ -141,12 +143,44 @@ function deleteFile(path) {
 
 function insertIntoDatabase(target, tags){
   target = target.replace('assets/', '');
-  Mp3.create({title: tags.title, album: tags.album, artist: tags.artist, year: tags.year, genre: tags.genre, path: target}).exec(function(err, created){
+  var title = tags.title;
+  var album = tags.album;
+
+  if(title === null){
+    title = pathLib.basename(target);
+  }
+
+  if (album === null) {
+    album = "Inconnu_" + moment().format('DD-MM-YYYY');
+  }
+
+
+  Mp3.create({title: title, album: album, artist: tags.artist, year: tags.year, genre: tags.genre, path: target}).exec(function(err, created){
     if(err){
       console.log("INSERT DB ERR");
       console.log(err);
     }else{
       console.log("Music " + created.title + " created");
+    }
+  });
+}
+
+function removeFileDB(path){
+  var songPath = path.replace('assets/', '');
+
+  console.log(songPath);
+
+  Mp3.findOne({path: songPath}).exec(function(err, result){
+    if(err){
+      console.log(err);
+    }else{
+      Mp3.destroy({id: result.id}).exec(function(err){
+        if(err){
+          console.log(err);
+        }else{
+          console.log("FILE DELETE INTO DATABASE");
+        }
+      });
     }
   });
 }
